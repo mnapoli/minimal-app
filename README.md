@@ -176,7 +176,7 @@ class HomeController
 {
     public function homepage()
     {
-        echo 'Hello world`;
+        echo 'Hello world';
     }
 }
 ```
