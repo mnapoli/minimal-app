@@ -1,5 +1,4 @@
 {
-    "name": "mnapoli/framework-example",
     "license": "MIT",
     "autoload": {
         "psr-4": {"TheWebApp\\": "src/TheWebApp/"}
