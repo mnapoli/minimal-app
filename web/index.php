@@ -18,7 +18,7 @@ $requestParameters = $router->match($url, $_SERVER)->params;
 $controller = $requestParameters['controller'];
 
 // Create the controller
-$controllerObject = $container->get($controller[0]);
+$controllerObject = $container->make($controller[0]);
 
 // Dispatch to the controller
 $container->call([$controllerObject, $controller[1]], $requestParameters);
