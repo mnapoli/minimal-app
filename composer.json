@@ -6,7 +6,6 @@
     },
     "require": {
         "mnapoli/php-di": "dev-feature/CallFunction",
-        "symfony/http-kernel": "~2.4",
         "aura/router": "dev-develop-2"
     },
     "minimum-stability": "dev",
