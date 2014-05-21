@@ -6,7 +6,7 @@ use Interop\Container\ContainerInterface;
 
 return [
 
-    'routes' => require __DIR__ . '/../app/routes.php',
+    'routes' => require __DIR__ . '/routes.php',
 
     Router::class => DI\factory(function (ContainerInterface $c) {
         $factory = new RouterFactory();
