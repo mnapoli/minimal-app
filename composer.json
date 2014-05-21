@@ -1,0 +1,14 @@
+{
+    "name": "mnapoli/framework-example",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {"TheWebApp\\": "src/TheWebApp/"}
+    },
+    "require": {
+        "mnapoli/php-di": "dev-feature/CallFunction",
+        "symfony/http-kernel": "~2.4",
+        "aura/router": "dev-develop-2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
