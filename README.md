@@ -213,7 +213,7 @@ Remember how we created and called our controllers:
 
 ```php
 $controllerObject = new $controller();
-$controllerObject->$method();
+$controllerObject->$action();
 ```
 
 This is bad!
@@ -305,7 +305,7 @@ To make this possible, we need to call the action (`homepage()`) with the route 
 We can use `Container::call()` in PHP-DI to do this:
 
 ```php
-$container->call([$controller, $method], $parameters);
+$container->call([$controller, $action], $parameters);
 ```
 
 FYI the `$parameters` are obtained from the router when matching a route:
