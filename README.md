@@ -72,22 +72,23 @@ Now that we have our router, we must use it to "match" the current URL and call 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $requestParameters = $router->match($url, $_SERVER)->params;
 $controller = $requestParameters['controller'];
+$action = $requestParameters['action'];
 ```
 
-`$controller` will be an array of that format: `['controller_class_name', 'method_name']`.
+`$controller` will be the class name : `controller_class_name`.
+
+`$action` will be the method name of the class to be called : `controller_class_method_name`.
 
 Here is a simple (and stupid) way to create the controller object:
 
 ```php
-$controllerClass = $controller[0];
-$controllerObject = new $controllerClass();
+$controllerObject = new $controller();
 ```
 
 And call the action method:
 
 ```php
-$controllerMethod = $controller[1];
-$controllerObject->$controllerMethod();
+$controllerObject->$action();
 ```
 
 **Super important:** this way of creating and calling the controller is bad.
@@ -117,12 +118,8 @@ return [
         $factory = new RouterFactory();
         $router = $factory->newInstance();
 
-        // Add the routes from the array config (Aura router doesn't seem to accept routes as array)
         $routes = $c->get('routes');
-        foreach ($routes as $routeName => $route) {
-            $router->add($routeName, $route['pattern'])
-                ->addValues(['controller' => $route['controller']]);
-        }
+        $router->setRoutes($routes);
 
         return $router;
     }),
@@ -156,7 +153,8 @@ Let's add a route for the home page in `app/routes.php`:
 return [
     'home' => [
         'pattern' => '/',
-        'controller' => ['TheWebApp\Controller\HomeController', 'homepage'],
+        'controller' => 'TheWebApp\Controller\HomeController', 
+        'action' => 'homepage',
     ],
 ];
 ```
@@ -214,8 +212,8 @@ Now when we visit http://localhost:8000/ we see `Hello world!`.
 Remember how we created and called our controllers:
 
 ```php
-$controllerObject = new $controllerClass();
-$controllerObject->$controllerMethod();
+$controllerObject = new $controller();
+$controllerObject->$method();
 ```
 
 This is bad!
@@ -242,7 +240,7 @@ Given the controller is created manually (using `new`) in `index.php`, we can't 
 To make this possible, we will use PHP-DI to **create** the controller:
 
 ```php
-$controllerObject = $container->make($controllerClass);
+$controllerObject = $container->make($controller);
 ```
 
 That way, PHP-DI will automatically inject the dependencies inside the controller!
@@ -277,11 +275,13 @@ Let's add another (very similar) route:
 return [
     'home' => [
         'pattern' => '/',
-        'controller' => ['TheWebApp\Controller\HomeController', 'homepage'],
+        'controller' => 'TheWebApp\Controller\HomeController', 
+        'action' => 'homepage',
     ],
     'greeting' => [
         'pattern' => '/{name}',
-        'controller' => ['TheWebApp\Controller\HomeController', 'homepage'],
+        'controller' => 'TheWebApp\Controller\HomeController', 
+        'action' => 'homepage',
     ],
 ];
 ```
@@ -305,7 +305,7 @@ To make this possible, we need to call the action (`homepage()`) with the route 
 We can use `Container::call()` in PHP-DI to do this:
 
 ```php
-$container->call([$controllerObject, $controllerMethod], $parameters);
+$container->call([$controller, $method], $parameters);
 ```
 
 FYI the `$parameters` are obtained from the router when matching a route:
